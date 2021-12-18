@@ -1,4 +1,8 @@
-<h1 align="center">WOTD — Lightweight Word of the Day in the command-line</h1>
+<h1 align="center">WOTD</h1>
+<h3 align="center">Lightweight Word of the Day in the command-line</h3>
+
+## Preview
+![Demo Gif](media/tty.gif)
 
 ## About
 
