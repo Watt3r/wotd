@@ -5,6 +5,7 @@
 [![Go](https://github.com/Watt3r/wotd/actions/workflows/go.yml/badge.svg)](https://github.com/Watt3r/wotd/actions/workflows/go.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/watt3r/wotd.svg?style=flat)](https://github.com/Watt3r/wotd/releases)
 [![License](https://img.shields.io/badge/License-Apache_2.0-orange.svg)](https://github.com/Watt3r/wotd/blob/master/LICENSE)
+[![Coverage Status](https://coveralls.io/repos/github/Watt3r/wotd/badge.svg?branch=master)](https://coveralls.io/github/Watt3r/wotd?branch=master)
 </div>
 
 ## Preview
