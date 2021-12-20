@@ -30,4 +30,4 @@ jobs:
     - name: Publish to coveralls.io
       env:
         COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: goveralls -coverprofile=covprofile -service=github
+      run: $HOME/gopath/bin/goveralls -coverprofile=covprofile -service=actions -repotoken $COVERALLS_TOKEN
