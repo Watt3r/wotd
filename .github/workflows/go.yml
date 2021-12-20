@@ -25,9 +25,9 @@ jobs:
       run: go test -v ./...
 
     - name: Coverage
-      run: go test -v -covermode=count -coverprofile=coverage.out
+      run: go test -v -covermode=count -coverprofile=covprofile ./...
 
     - name: Publish to coveralls.io
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: goveralls -coverprofile=covprofile -service=github
