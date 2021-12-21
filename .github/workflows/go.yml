@@ -28,6 +28,6 @@ jobs:
       run: go test -v -covermode=count -coverprofile=covprofile ./...
 
     - name: Publish to coveralls.io
-      env:
-        COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: $HOME/gopath/bin/goveralls -coverprofile=covprofile -service=actions -repotoken $COVERALLS_TOKEN
+      uses: shogo82148/actions-goveralls@v1
+      with:
+        path-to-profile: covprofile
