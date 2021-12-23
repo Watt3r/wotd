@@ -2,6 +2,8 @@ package main
 
 import (
     "fmt"
+    "flag"
+    "time"
     "io/ioutil"
     "net/http"
     "log"
@@ -27,8 +29,16 @@ func findPhrase(pageContent string, start string, end string) (string, error) {
     return strWord, nil
 }
 
-func getWotd(url string) (string, error) {
-    resp, err := http.Get(url)
+func getWotd(url string, date *string) (string, error) {
+    // Validate date
+    if *date != "" {
+      parsedDate, err := time.Parse("2006-01-02", *date)
+      if err != nil || parsedDate.After(time.Now()) {
+        return "", fmt.Errorf("invalid date")
+      }
+    }
+
+    resp, err := http.Get(url + *date)
     if err != nil {
       return "", fmt.Errorf("error with getting Wotd from url")
     }
@@ -45,8 +55,13 @@ func main() {
     blue := color.New(color.FgBlue).Add(color.Bold).SprintFunc()
     green := color.New(color.FgGreen).Add(color.Bold).SprintFunc()
 
+    // Get specific date if specified
+    date := flag.String("date", "", "Optional date of Word of the Day, YYYY-MM-DD")
+    flag.StringVar(date, "d", "", "Optional date of Word of the Day, YYYY-MM-DD")
+    flag.Parse()
+
     // Get Word of the Day from Merriam-Webster
-    pageContent, err := getWotd("https://www.merriam-webster.com/word-of-the-day/")
+    pageContent, err := getWotd("https://www.merriam-webster.com/word-of-the-day/", date)
     if err != nil {
       log.Fatal("Wotd could not load URL, are you connected to the internet?")
     }
