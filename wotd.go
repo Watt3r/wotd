@@ -34,7 +34,7 @@ func getWotd(url string, date *string) (string, error) {
     if *date != "" {
       parsedDate, err := time.Parse("2006-01-02", *date)
       if err != nil || parsedDate.After(time.Now()) {
-        return "", fmt.Errorf("invalid date")
+        return "", fmt.Errorf("invalid date format")
       }
     }
 
@@ -63,7 +63,7 @@ func main() {
     // Get Word of the Day from Merriam-Webster
     pageContent, err := getWotd("https://www.merriam-webster.com/word-of-the-day/", date)
     if err != nil {
-      log.Fatal("Wotd could not load URL, are you connected to the internet?")
+      log.Fatal(err)
     }
     word, err := findPhrase(pageContent, "<h1>", "</h1>")
     def, err := findPhrase(pageContent, "<p>", "</p>")

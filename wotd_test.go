@@ -65,6 +65,15 @@ func TestGetWotdWithBadFormatDate(t *testing.T) {
     }
 }
 
+func TestGetWotdWithBadFormatDate2(t *testing.T) {
+    url := "https://www.merriam-webster.com/word-of-the-day/"
+    date := "1-1-2021"
+    pageContent, err := getWotd(url, &date)
+    if err == nil || pageContent != "" {
+        t.Fatalf(`getWotd()  = %q, want %#q, nil`, pageContent, "")
+    }
+}
+
 func TestGetWotdWithBadFutureDate(t *testing.T) {
     url := "https://www.merriam-webster.com/word-of-the-day/"
     date := time.Now().AddDate(0,1,0).Format("2006-01-02")
@@ -73,7 +82,6 @@ func TestGetWotdWithBadFutureDate(t *testing.T) {
         t.Fatalf(`getWotd()  = %q, want %#q, nil`, pageContent, "")
     }
 }
-
 
 func TestErrorGetWotdBadURL(t *testing.T) {
     url := "https://uuu.merriam-webster.com/word-of-the-day/"
