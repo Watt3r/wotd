@@ -1,53 +1,52 @@
 package main
 
 import (
-    "fmt"
-    "flag"
-    "time"
-    "io/ioutil"
-    "net/http"
-    "log"
-    "strings"
-    "regexp"
-    "github.com/fatih/color"
+	"flag"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"regexp"
+	"strings"
+	"time"
 )
 
 func findPhrase(pageContent string, start string, end string) (string, error) {
-    wordIndex := strings.Index(pageContent, start)
-    // Error if start not found
-    if wordIndex == -1 {
-      return "", fmt.Errorf("could not find phrase")
-    }
-    wordIndex += len(start)
-    wordEndIndex := strings.Index(pageContent[wordIndex:], end) + wordIndex
-    // Error if end not found
-    if wordIndex > wordEndIndex {
-      return "", fmt.Errorf("could not find phrase")
-    }
-    word := []byte(pageContent[wordIndex:wordEndIndex])
-    strWord := fmt.Sprintf("%s", word)
-    return strWord, nil
+	wordIndex := strings.Index(pageContent, start)
+	// Error if start not found
+	if wordIndex == -1 {
+		return "", fmt.Errorf("could not find phrase")
+	}
+	wordIndex += len(start)
+	wordEndIndex := strings.Index(pageContent[wordIndex:], end) + wordIndex
+	// Error if end not found
+	if wordIndex > wordEndIndex {
+		return "", fmt.Errorf("could not find phrase")
+	}
+	word := []byte(pageContent[wordIndex:wordEndIndex])
+	strWord := fmt.Sprintf("%s", word)
+	return strWord, nil
 }
 
 func getWotd(url string, date *string) (string, error) {
-    // Validate date
-    if *date != "" {
-      parsedDate, err := time.Parse("2006-01-02", *date)
-      if err != nil || parsedDate.After(time.Now()) {
-        return "", fmt.Errorf("invalid date format")
-      }
-    }
+	// Validate date
+	if *date != "" {
+		parsedDate, err := time.Parse("2006-01-02", *date)
+		if err != nil || parsedDate.After(time.Now()) {
+			return "", fmt.Errorf("invalid date format")
+		}
+	}
 
-    resp, err := http.Get(url + *date)
-    if err != nil {
-      return "", fmt.Errorf("error with getting Wotd from url")
-    }
-    defer resp.Body.Close()
-    data, err := ioutil.ReadAll(resp.Body)
+	resp, err := http.Get(url + *date)
+	if err != nil {
+		return "", fmt.Errorf("error with getting Wotd from url")
+	}
+	defer resp.Body.Close()
+	data, err := ioutil.ReadAll(resp.Body)
 
-    // Simple parse HTML 
-    pageContent := string(data)
-    return pageContent, nil
+	// Simple parse HTML
+	pageContent := string(data)
+	return pageContent, nil
 }
 
 func color(word string, color string, noColor bool) string {
