@@ -33,6 +33,24 @@ func TestErrorPhraseNoEnd(t *testing.T) {
     }
 }
 
+func TestColor(t *testing.T) {
+	phrase := "abcdefghijklmnopqrstuvwxyz"
+	want := "\u001b[1m\u001b[36mabcdefghijklmnopqrstuvwxyz\033[0m"
+	colorOutput := color(phrase, "\u001b[36m", false)
+	t.Logf("\n\n\n" + want + "\n" + colorOutput + "\n")
+	if colorOutput != want {
+		t.Fatalf(`color("abc", "ansi", false) = %q, want match for %#q, nil`, colorOutput, want)
+	}
+}
+
+func TestColorNoColor(t *testing.T) {
+	phrase := "abcdefghijklmnopqrstuvwxyz"
+	word := color(phrase, "legitanythingthisdoesntmatter", true)
+	if word != phrase {
+		t.Fatalf(`color("abc", "doesntmatter", true) = %q, want "", error`, word)
+	}
+}
+
 func TestGetWotd(t *testing.T) {
     url := "https://www.merriam-webster.com/word-of-the-day/"
     date := ""

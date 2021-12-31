@@ -50,24 +50,33 @@ func getWotd(url string, date *string) (string, error) {
     return pageContent, nil
 }
 
+func color(word string, color string, noColor bool) string {
+	if noColor {
+		return word
+	}
+
+	// Bold ansi + color ansi + word + reset ansi
+	return "\u001b[1m" + color + word + "\033[0m"
+}
+
 func main() {
-    // Color output
-    blue := color.New(color.FgBlue).Add(color.Bold).SprintFunc()
-    green := color.New(color.FgGreen).Add(color.Bold).SprintFunc()
+	// Get specific date if specified
+	date := flag.String("date", "", "Optional date of Word of the Day, YYYY-MM-DD")
+	flag.StringVar(date, "d", "", "Optional date of Word of the Day, YYYY-MM-DD")
+	noColor := flag.Bool("no-color", false, "Disables color output")
+	flag.Parse()
 
-    // Get specific date if specified
-    date := flag.String("date", "", "Optional date of Word of the Day, YYYY-MM-DD")
-    flag.StringVar(date, "d", "", "Optional date of Word of the Day, YYYY-MM-DD")
-    flag.Parse()
+	// Get Word of the Day from Merriam-Webster
+	pageContent, err := getWotd("https://www.merriam-webster.com/word-of-the-day/", date)
+	if err != nil {
+		log.Fatal(err)
+	}
+	word, err := findPhrase(pageContent, "<h1>", "</h1>")
+	def, err := findPhrase(pageContent, "<p>", "</p>")
+	def = regexp.MustCompile("</?em>").ReplaceAllString(def, "")
 
-    // Get Word of the Day from Merriam-Webster
-    pageContent, err := getWotd("https://www.merriam-webster.com/word-of-the-day/", date)
-    if err != nil {
-      log.Fatal(err)
-    }
-    word, err := findPhrase(pageContent, "<h1>", "</h1>")
-    def, err := findPhrase(pageContent, "<p>", "</p>")
-
-    // Print result
-    fmt.Printf("Word of the Day: %s\nDefinition: %s\n",  blue(word), green(regexp.MustCompile("</?em>").ReplaceAllString(def, "")))
+	// Print result
+	blue := "\u001b[36m"
+	green := "\u001b[32m"
+	fmt.Printf("Word of the Day: %s\nDefinition: %s\n", color(word, blue, *noColor), color(def, green, *noColor))
 }
