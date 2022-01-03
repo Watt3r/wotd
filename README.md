@@ -22,7 +22,6 @@ Visit [Releases](https://github.com/watt3r/wotd/releases)
 
 ## Roadmap
 - Add flags to pull wotd from different sources
-- Add flag to pull wotd from different dates
 
 ## License
 
