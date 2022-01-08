@@ -62,16 +62,34 @@ func main() {
 	// Get specific date if specified
 	date := flag.String("date", "", "Optional date of Word of the Day, YYYY-MM-DD")
 	flag.StringVar(date, "d", "", "Optional date of Word of the Day, YYYY-MM-DD")
+	source := flag.String("source", "", "Optional source to get Word of the Day, Allowed values: merriam, dictionary")
+	flag.StringVar(source, "s", "", "Optional source to get Word of the Day, Allowed values: merriam, dictionary")
 	noColor := flag.Bool("no-color", false, "Disables color output")
 	flag.Parse()
 
 	// Get Word of the Day from Merriam-Webster
-	pageContent, err := getWotd("https://www.merriam-webster.com/word-of-the-day/", date)
+	url := ""
+        wordStart := ""
+        defStart := ""
+        if (*source == "dictionary") {
+          url = "https://www.dictionary.com/e/word-of-the-day/"
+          wordStart =  "<h1 class=\"js-fit-text\" style=\"color: #00248B\">"
+          // Dictionary.com doesn't use any class or id on the definition <p> element, this is the best way to isolate
+          defStart = "</p>\n\n                \n                <p>"
+          // Dictionary.com doesn't have a searchable archive, manually ensure date is set to today
+          *date = ""
+        } else {
+          url = "https://www.merriam-webster.com/word-of-the-day/"
+          wordStart = "<h1>"
+          defStart = "<p>"
+        }
+
+	pageContent, err := getWotd(url, date)
 	if err != nil {
 		log.Fatal(err)
 	}
-	word, err := findPhrase(pageContent, "<h1>", "</h1>")
-	def, err := findPhrase(pageContent, "<p>", "</p>")
+	word, err := findPhrase(pageContent, wordStart, "</h1>")
+	def, err := findPhrase(pageContent, defStart, "</p>")
 	def = regexp.MustCompile("</?em>").ReplaceAllString(def, "")
 
 	// Print result
