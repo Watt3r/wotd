@@ -20,6 +20,18 @@ Pulls from online data, so you must have an internet connection
 
 Visit [Releases](https://github.com/watt3r/wotd/releases)
 
+## Testing
+
+To run the test suite, install go and run
+
+`go test`
+
+Example working output:
+```
+PASS
+ok  	watt3r/wotd	1.235s
+```
+
 ## Roadmap
 - Add flags to pull wotd from different sources
 
