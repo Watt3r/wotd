@@ -58,6 +58,25 @@ func color(word string, color string, noColor bool) string {
 	return "\u001b[1m" + color + word + "\033[0m"
 }
 
+func getSource(source *string, date *string) (string, string, string) {
+	url := ""
+	wordStart := ""
+	defStart := ""
+	if *source == "dictionary" {
+		url = "https://www.dictionary.com/e/word-of-the-day/"
+		wordStart = "<h1 class=\"js-fit-text\" style=\"color: #00248B\">"
+		// Dictionary.com doesn't use any class or id on the definition <p> element, this is the best way to isolate
+		defStart = "</p>\n\n                \n                <p>"
+		// Dictionary.com doesn't have a searchable archive, manually ensure date is set to today
+		*date = ""
+	} else {
+		url = "https://www.merriam-webster.com/word-of-the-day/"
+		wordStart = "<h1>"
+		defStart = "<p>"
+	}
+	return url, wordStart, defStart
+}
+
 func main() {
 	// Get specific date if specified
 	date := flag.String("date", "", "Optional date of Word of the Day, YYYY-MM-DD")
@@ -68,21 +87,7 @@ func main() {
 	flag.Parse()
 
 	// Get Word of the Day from Merriam-Webster
-	url := ""
-        wordStart := ""
-        defStart := ""
-        if (*source == "dictionary") {
-          url = "https://www.dictionary.com/e/word-of-the-day/"
-          wordStart =  "<h1 class=\"js-fit-text\" style=\"color: #00248B\">"
-          // Dictionary.com doesn't use any class or id on the definition <p> element, this is the best way to isolate
-          defStart = "</p>\n\n                \n                <p>"
-          // Dictionary.com doesn't have a searchable archive, manually ensure date is set to today
-          *date = ""
-        } else {
-          url = "https://www.merriam-webster.com/word-of-the-day/"
-          wordStart = "<h1>"
-          defStart = "<p>"
-        }
+	url, wordStart, defStart := getSource(source, date)
 
 	pageContent, err := getWotd(url, date)
 	if err != nil {

@@ -120,6 +120,24 @@ func TestErrorGetWotdBadFormat(t *testing.T) {
 	}
 }
 
+func TestGetSourceWebster(t *testing.T) {
+	source := "merriam"
+	date := ""
+	url, wordStart, defStart := getSource(&source, &date)
+	if url != "https://www.merriam-webster.com/word-of-the-day/" || wordStart != "<h1>" || defStart != "<p>" {
+		t.Fatalf(`getSource("merriam") = %q, %q, %q`, url, defStart, defStart)
+	}
+}
+
+func TestGetSourceDictionary(t *testing.T) {
+	source := "dictionary"
+	date := ""
+	url, wordStart, defStart := getSource(&source, &date)
+	if url != "https://www.dictionary.com/e/word-of-the-day/" || wordStart != "<h1 class=\"js-fit-text\" style=\"color: #00248B\">" || defStart != "</p>\n\n                \n                <p>" {
+		t.Fatalf(`getSource("dictionary") = %q, %q, %q`, url, defStart, defStart)
+	}
+}
+
 func TestMain(t *testing.T) {
 	// This is a bad test, it only checks if it can run without erroring, not if the Printf is accurate
 	main()
