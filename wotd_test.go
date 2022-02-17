@@ -122,18 +122,18 @@ func TestErrorGetWotdBadFormat(t *testing.T) {
 
 func TestGetSourceWebster(t *testing.T) {
 	source := "merriam"
-	date := ""
+	date := "2021-01-01"
 	url, wordStart, defStart := getSource(&source, &date)
-	if url != "https://www.merriam-webster.com/word-of-the-day/" || wordStart != "<h1>" || defStart != "<p>" {
+	if url != "https://www.merriam-webster.com/word-of-the-day/" || wordStart != "<h1>" || defStart != "<p>" || date != "2021-01-01" {
 		t.Fatalf(`getSource("merriam") = %q, %q, %q`, url, defStart, defStart)
 	}
 }
 
 func TestGetSourceDictionary(t *testing.T) {
 	source := "dictionary"
-	date := ""
+	date := "2021-01-01"
 	url, wordStart, defStart := getSource(&source, &date)
-	if url != "https://www.dictionary.com/e/word-of-the-day/" || wordStart != "<h1 class=\"js-fit-text\" style=\"color: #00248B\">" || defStart != "</p>\n\n                \n                <p>" {
+	if url != "https://www.dictionary.com/e/word-of-the-day/" || wordStart != "<h1 class=\"js-fit-text\" style=\"color: #00248B\">" || defStart != "</p>\n\n                \n                <p>" || date != "" {
 		t.Fatalf(`getSource("dictionary") = %q, %q, %q`, url, defStart, defStart)
 	}
 }
